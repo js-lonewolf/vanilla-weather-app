@@ -12,6 +12,9 @@
     />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="src/style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap");
+    </style>
     <title>Weather App</title>
   </head>
   <body>
@@ -20,7 +23,7 @@
         <div class="weather-app">
           <form id="search-form" class="mb-3">
             <div class="row">
-              <div class="col-9">
+              <div class="col-6" style="padding-right: 0">
                 <input
                   type="search"
                   placeholder="Type a city.."
@@ -29,20 +32,29 @@
                   autocomplete="off"
                 />
               </div>
-              <div class="col-3">
+              <div class="col-3" style="padding-right: 0">
                 <input
                   type="submit"
                   value="Search"
                   class="btn btn-primary w-100"
                 />
               </div>
+              <div class="col-3">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary my-location"
+                  id="my-location"
+                >
+                  My Location
+                </button>
+              </div>
             </div>
           </form>
           <div class="overview">
             <h1 id="city"></h1>
-            <ul>
+            <ul class="weather-updates">
               <li>Last updated: <span id="date">Friday 05:00</span></li>
-              <li id="description"></li>
+              <li class="weather-desc" id="description"></li>
             </ul>
           </div>
           <div class="row">
@@ -54,7 +66,7 @@
                   id="icon"
                   class="float-left"
                 />
-                <div class="float-left">
+                <div class="float-left mt-5">
                   <strong id="temperature"></strong
                   ><span class="units">
                     <a href="#" id="celsius-link" class="active">°C</a> |
@@ -63,10 +75,14 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-6 mt-5">
               <ul>
-                <li>Humidity: <span id="humidity"></span>%</li>
-                <li>Wind: <span id="wind"></span> m/h</li>
+                <li class="additional-info">
+                  💧 Humidity: <span id="humidity"></span>%
+                </li>
+                <li class="additional-info">
+                  🍃 Wind: <span id="wind"></span> m/h
+                </li>
               </ul>
             </div>
           </div>
@@ -83,5 +99,165 @@
       </div>
     </div>
     <script src="src/app.js"></script>
+    <script>
+      let apiKey = "88ee3d64a1b4b3c87b724cbe8f9f9e1a";
+      let tempTitle = document.querySelector("#temperature");
+      let currentCity = document.querySelector("#city");
+      let weatherDesc = document.querySelector("#description");
+      let weatherIcon = document.querySelector("#icon");
+      let button = document.querySelector("#my-location");
+
+      function displayForecast(response) {
+        let forecast = response.data.daily;
+
+        let forecastElement = document.querySelector("#forecast");
+
+        let forecastHTML = `<div class="row">`;
+        forecast.forEach(function (forecastDay, index) {
+          if (index < 6) {
+            forecastHTML =
+              forecastHTML +
+              `
+        <div class="col-2">
+        <div class="weather-forecast-date">${formatDay(forecastDay.dt)}</div>
+        <img
+            src="http://openweathermap.org/img/wn/${
+              forecastDay.weather[0].icon
+            }@2x.png"
+            alt=""
+            width="42"
+        />
+        <div class="weather-forecast-temperatures">
+            <span class="weather-forecast-temperature-max"> ${Math.round(
+              forecastDay.temp.max
+            )}° </span>
+            <span class="weather-forecast-temperature-min"> ${Math.round(
+              forecastDay.temp.min
+            )}° </span>
+        </div>
+        
+        </div>
+        `;
+          }
+        });
+
+        forecastHTML = forecastHTML + `</div>`;
+        forecastElement.innerHTML = forecastHTML;
+      }
+
+      function getForecast(coordinates) {
+        let apiKey = "88ee3d64a1b4b3c87b724cbe8f9f9e1a";
+        let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+        axios.get(apiUrl).then(displayForecast);
+      }
+
+      button.addEventListener("click", () => {
+        let long;
+        let lat;
+
+        // Accesing Geolocation of User
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            // Storing Longitude and Latitude in variables
+            long = position.coords.longitude;
+            lat = position.coords.latitude;
+            let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}&units=metric`;
+
+            // Using fetch to get data
+            fetch(url)
+              .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                let { temp } = data.main;
+                let thisCity = data.name;
+                let thisWeatherDesc = data.weather[0].description;
+                let { humidity } = data.main;
+                let thisWind = data.wind.speed;
+                let thisIcon = data.weather[0].icon;
+                let thisCoordinates = data.coord;
+
+                if (thisIcon === "01d") {
+                  weatherIcon.setAttribute("src", "src/weather-icons/day.svg");
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "02d") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/cloudy-day-3.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "03d" || thisIcon === "03n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/cloudy.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "04d" || thisIcon === "04n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/cloudy.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "09d" || thisIcon === "09n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/rainy-6.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "10d" || thisIcon === "10n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/rainy-3.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "11d" || thisIcon === "11n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/thunder.svg"
+                  );
+                  weatherIcon.setAttribute(
+                    "alt",
+                    response.data.weather[0].description
+                  );
+                } else if (thisIcon === "13d" || thisIcon === "13n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/snowy-6.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "50d" || thisIcon === "50n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/rainy-4.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "01n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/night.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                } else if (thisIcon === "02n") {
+                  weatherIcon.setAttribute(
+                    "src",
+                    "src/weather-icons/cloudy-night-3.svg"
+                  );
+                  weatherIcon.setAttribute("alt", thisWeatherDesc);
+                }
+
+                // Interacting with DOM to show data
+                let currentTemp = Math.round(temp.toFixed(2));
+                tempTitle.textContent = `${currentTemp}`;
+                currentCity.textContent = `${thisCity}`;
+                weatherDesc.textContent = `${thisWeatherDesc}`;
+                document.querySelector("#humidity").textContent = humidity;
+                document.querySelector("#wind").textContent = thisWind;
+
+                getForecast(thisCoordinates);
+              });
+          });
+        }
+      });
+    </script>
   </body>
 </html>

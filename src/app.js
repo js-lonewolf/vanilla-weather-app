@@ -91,11 +91,62 @@ function displayTemperature(response) {
   humidityElement.innerHTML = response.data.main.humidity;
   windElement.innerHTML = Math.round(response.data.wind.speed);
   dateElement.innerHTML = formatDate(response.data.dt * 1000);
-  iconElement.setAttribute(
-    "src",
-    `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-  );
-  iconElement.setAttribute("alt", response.data.weather[0].description);
+
+  if (response.data.weather[0].icon === "01d") {
+    iconElement.setAttribute("src", "src/weather-icons/day.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (response.data.weather[0].icon === "02d") {
+    iconElement.setAttribute("src", "src/weather-icons/cloudy-day-3.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "03d" ||
+    response.data.weather[0].icon === "03n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/cloudy.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "04d" ||
+    response.data.weather[0].icon === "04n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/cloudy.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "09d" ||
+    response.data.weather[0].icon === "09n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/rainy-6.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "10d" ||
+    response.data.weather[0].icon === "10n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/rainy-3.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "11d" ||
+    response.data.weather[0].icon === "11n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/thunder.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "13d" ||
+    response.data.weather[0].icon === "13n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/snowy-6.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (
+    response.data.weather[0].icon === "50d" ||
+    response.data.weather[0].icon === "50n"
+  ) {
+    iconElement.setAttribute("src", "src/weather-icons/rainy-4.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (response.data.weather[0].icon === "01n") {
+    iconElement.setAttribute("src", "src/weather-icons/night.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  } else if (response.data.weather[0].icon === "02n") {
+    iconElement.setAttribute("src", "src/weather-icons/cloudy-night-3.svg");
+    iconElement.setAttribute("alt", response.data.weather[0].description);
+  }
 
   getForecast(response.data.coord);
 }

@@ -1,11 +1,11 @@
 body {
-  font-family: arial, sans-serif;
+  font-family: Oxygen, sans-serif;
 }
 
 h1 {
-  color: #878787;
-  font-size: 24px;
-  font-weight: 100;
+  color: #03045e;
+  font-size: 40px;
+  font-weight: 700;
   line-height: 28px;
   margin-bottom: 0;
 }
@@ -20,7 +20,7 @@ li {
   margin: 0;
   padding: 0;
 
-  color: rgb(135, 135, 135);
+  color: #808080;
   font-size: 16px;
   font-weight: 100;
   line-height: 19px;
@@ -39,20 +39,37 @@ li:first-letter {
   padding: 20px;
   border: 1px solid #dadde1;
   border-radius: 5px;
+  background-color: #edfafd;
 }
 
 .overview {
-  margin-bottom: 20px;
+  margin: 30px 0 20px 0px;
+}
+
+.weather-updates {
+  display: block;
+  margin-top: 15px;
+}
+
+.weather-desc {
+  display: block;
+  margin-top: 15px;
+  color: #03045e;
+  font-weight: 400;
+}
+
+.additional-info {
+  color: #03045e;
 }
 
 .weather-temperature img {
   margin-right: 5px;
-  height: 64px;
-  width: 64px;
+  height: auto;
+  width: 50%;
 }
 
 .weather-temperature strong {
-  color: rgb(33, 33, 33);
+  color: #03045e;
   font-size: 64px;
   line-height: 1;
   font-weight: 400;
@@ -76,18 +93,18 @@ li:first-letter {
 .weather-forecast {
   margin-top: 20px;
   text-align: center;
-  color: #000;
 }
 
 .weather-forecast-date {
   font-size: 16px;
-  opacity: 0.5;
+  color: #808080;
 }
 
 .weather-forecast-temperature-min {
-  opacity: 0.5;
+  color: #808080;
 }
 
 .weather-forecast-temperatures {
-  font-size: 13px;
+  font-size: 16px;
+  color: #03045e;
 }
